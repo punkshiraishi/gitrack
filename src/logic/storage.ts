@@ -1,3 +1,11 @@
 import { useStorageLocal } from '~/composables/useStorageLocal'
 
-export const storageDemo = useStorageLocal('webext-demo', 'Storage Demo', { listenToStorageChanges: true })
+type Options = {
+  gitlabToken: string
+}
+
+export const storageOptions = useStorageLocal<Options>(
+  'options',
+  { gitlabToken: '' },
+  { listenToStorageChanges: true },
+)
