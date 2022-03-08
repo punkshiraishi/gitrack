@@ -16,6 +16,22 @@ browser.runtime.onInstalled.addListener((): void => {
 
 let previousTabId = 0
 
+async function getIssues(token: string, project: string) {
+  const url = `https://gitlab.com/api/v4/projects/${project}/issues`
+  fetch(url, {
+    method: 'get',
+    headers: {
+      'Private-Token': token,
+    },
+    credentials: 'include',
+  }).then((response) => {
+    response.json().then((data) => {
+      // eslint-disable-next-line no-console
+      console.log(data)
+    })
+  })
+}
+
 // communication example: send previous tab title from background page
 // see shim.d.ts for type declaration
 browser.tabs.onActivated.addListener(async({ tabId }) => {
@@ -28,6 +44,11 @@ browser.tabs.onActivated.addListener(async({ tabId }) => {
 
   try {
     tab = await browser.tabs.get(previousTabId)
+
+    // ストレージから options の値を取得
+    const options = JSON.parse((await browser.storage.local.get('options')).options)
+    getIssues(options.gitlabToken, '12004953')
+
     previousTabId = tabId
   }
   catch {

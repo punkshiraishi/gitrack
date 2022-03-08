@@ -45,6 +45,9 @@ export async function getManifest() {
     web_accessible_resources: [
       'dist/contentScripts/style.css',
     ],
+    host_permissions: [
+      'https://gitlab.com/api/*',
+    ],
   }
 
   if (isDev) {
