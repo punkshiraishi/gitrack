@@ -18,18 +18,20 @@ let previousTabId = 0
 
 async function getIssues(token: string, project: string) {
   const url = `https://gitlab.com/api/v4/projects/${project}/issues`
-  fetch(url, {
+  const response = await fetch(url, {
     method: 'get',
     headers: {
       'Private-Token': token,
     },
     credentials: 'include',
-  }).then((response) => {
-    response.json().then((data) => {
-      // eslint-disable-next-line no-console
-      console.log(data)
-    })
   })
+
+  const data = await response.json()
+
+  // eslint-disable-next-line no-console
+  console.log(data)
+
+  return data
 }
 
 // communication example: send previous tab title from background page
@@ -72,4 +74,12 @@ onMessage('get-current-tab', async() => {
       title: undefined,
     }
   }
+})
+
+onMessage('reload-issues', async() => {
+  // ストレージから options の値を取得
+  const options = JSON.parse((await browser.storage.local.get('options')).options)
+  const issues = await getIssues(options.gitlabToken, '12004953')
+  await browser.storage.local.set({ issues: JSON.stringify(issues) })
+  return issues
 })
