@@ -1,5 +1,6 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
+import { postTimeentries } from './api'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -82,4 +83,8 @@ onMessage('reload-issues', async() => {
   const issues = await getIssues(options.gitlabToken, '12004953')
   await browser.storage.local.set({ issues: JSON.stringify(issues) })
   return issues
+})
+
+onMessage('start-tracking', async() => {
+  await postTimeentries()
 })
