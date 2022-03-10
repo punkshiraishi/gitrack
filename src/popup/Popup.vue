@@ -27,7 +27,7 @@ onMounted(async() => {
   const url = tabs[0].url
 
   if (url) {
-    const matchedIssueId = url.match(/\/-\/issues\/(\d.+)/)
+    const matchedIssueId = url.match(/\/-\/issues\/(\d+)/)
 
     if (matchedIssueId) {
       issueId.value = matchedIssueId[1]
