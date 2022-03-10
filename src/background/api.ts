@@ -32,3 +32,21 @@ export async function postTimeentries() {
 
   return await response.json()
 }
+
+export async function getIssues(token: string, project: string) {
+  const url = `https://gitlab.com/api/v4/projects/${project}/issues`
+  const response = await fetch(url, {
+    method: 'get',
+    headers: {
+      'Private-Token': token,
+    },
+    credentials: 'include',
+  })
+
+  const data = await response.json()
+
+  // eslint-disable-next-line no-console
+  console.log(data)
+
+  return data
+}

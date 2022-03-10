@@ -17,24 +17,6 @@ browser.runtime.onInstalled.addListener((): void => {
 
 let previousTabId = 0
 
-async function getIssues(token: string, project: string) {
-  const url = `https://gitlab.com/api/v4/projects/${project}/issues`
-  const response = await fetch(url, {
-    method: 'get',
-    headers: {
-      'Private-Token': token,
-    },
-    credentials: 'include',
-  })
-
-  const data = await response.json()
-
-  // eslint-disable-next-line no-console
-  console.log(data)
-
-  return data
-}
-
 // communication example: send previous tab title from background page
 // see shim.d.ts for type declaration
 browser.tabs.onActivated.addListener(async({ tabId }) => {
@@ -47,10 +29,6 @@ browser.tabs.onActivated.addListener(async({ tabId }) => {
 
   try {
     tab = await browser.tabs.get(previousTabId)
-
-    // ストレージから options の値を取得
-    const options = JSON.parse((await browser.storage.local.get('options')).options)
-    getIssues(options.gitlabToken, '12004953')
 
     previousTabId = tabId
   }
@@ -75,14 +53,6 @@ onMessage('get-current-tab', async() => {
       title: undefined,
     }
   }
-})
-
-onMessage('reload-issues', async() => {
-  // ストレージから options の値を取得
-  const options = JSON.parse((await browser.storage.local.get('options')).options)
-  const issues = await getIssues(options.gitlabToken, '12004953')
-  await browser.storage.local.set({ issues: JSON.stringify(issues) })
-  return issues
 })
 
 onMessage('start-tracking', async() => {
