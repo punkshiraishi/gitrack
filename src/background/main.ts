@@ -1,6 +1,6 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
-import { postTimeentries } from './api'
+import { getIssue, getProjectsByName, postTimeentries } from './api'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -57,4 +57,19 @@ onMessage('get-current-tab', async() => {
 
 onMessage('start-tracking', async() => {
   await postTimeentries()
+})
+
+onMessage('get-issue-name', async({ data }) => {
+  const projects = await getProjectsByName(data.projectName)
+
+  let issueName = ''
+
+  if (projects.length > 0) {
+    const { title } = await getIssue(projects[0].id.toString(), data.issueId)
+    issueName = title
+  }
+
+  return {
+    issueName,
+  }
 })

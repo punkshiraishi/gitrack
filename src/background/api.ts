@@ -1,3 +1,5 @@
+import * as convertKeys from 'convert-keys'
+import { z } from 'zod'
 import { optionsSchema } from '~/logic'
 
 async function getOptions() {
@@ -16,11 +18,11 @@ async function fetchClocify(method: 'get' | 'post', path: string, body: Record<s
       'X-Api-Key': clockifyToken,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(convertKeys.toSnake(body)) : undefined,
     credentials: 'include',
   })
 
-  return await response.json()
+  return convertKeys.toCamel(await response.json())
 }
 
 export async function postTimeentries() {
@@ -30,23 +32,58 @@ export async function postTimeentries() {
     { start: new Date() },
   )
 
-  return await response.json()
+  return response
 }
 
-export async function getIssues(token: string, project: string) {
-  const url = `https://gitlab.com/api/v4/projects/${project}/issues`
+async function fetchGitlab(method: 'get' | 'post', path: string, body?: Record<string, string | Date>) {
+  const { gitlabToken } = await getOptions()
+  const url = `https://gitlab.com/api/v4/${path}`
+
   const response = await fetch(url, {
-    method: 'get',
+    method,
     headers: {
-      'Private-Token': token,
+      'Private-Token': gitlabToken,
+      'Content-Type': 'application/json',
     },
+    body: body ? JSON.stringify(convertKeys.toSnake(body)) : undefined,
     credentials: 'include',
   })
 
-  const data = await response.json()
+  return convertKeys.toCamel(await response.json())
+}
 
-  // eslint-disable-next-line no-console
-  console.log(data)
+/**
+ * GET /projects
+ */
+const gitlabProjectsSchema = z.array(z.object({
+  id: z.number(),
+}))
 
-  return data
+export type GitlabProjects = z.infer<typeof gitlabProjectsSchema>
+
+export async function getProjectsByName(projectName: string) {
+  const response = await fetchGitlab(
+    'get',
+    `projects?search=${projectName}`,
+  )
+
+  return gitlabProjectsSchema.parse(response)
+}
+
+/**
+ * GET /issues
+ */
+const gitlabIssueSchema = z.object({
+  title: z.string(),
+})
+
+export type GitlabIssues = z.infer<typeof gitlabIssueSchema>
+
+export async function getIssue(projectId: string, issueId: string) {
+  const response = await fetchGitlab(
+    'get',
+    `projects/${projectId}/issues/${issueId}`,
+  )
+
+  return gitlabIssueSchema.parse(response)
 }

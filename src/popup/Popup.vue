@@ -7,7 +7,8 @@
       Start Tracking
     </button>
     {{ issueId }}
-    {{ repository }}
+    {{ projectName }}
+    {{ issueName }}
   </main>
 </template>
 
@@ -15,7 +16,8 @@
 import { sendMessage } from 'webext-bridge'
 
 const issueId = ref('')
-const repository = ref('')
+const projectName = ref('')
+const issueName = ref('')
 
 onMounted(async() => {
   const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
@@ -28,10 +30,21 @@ onMounted(async() => {
       issueId.value = matchedIssueId[1]
     }
 
-    const machedRepository = url.match(/\/([^\/]+)\/-\/issues/)
+    const machedProjectName = url.match(/\/([^\/]+)\/-\/issues/)
 
-    if (machedRepository) {
-      repository.value = machedRepository[1]
+    if (machedProjectName) {
+      projectName.value = machedProjectName[1]
+    }
+
+    if (matchedIssueId && machedProjectName) {
+      const response = await sendMessage('get-issue-name', {
+        issueId: matchedIssueId[1],
+        projectName: machedProjectName[1],
+      })
+
+      if (response.issueName) {
+        issueName.value = response.issueName
+      }
     }
   }
 })
@@ -43,4 +56,5 @@ function openOptionsPage() {
 async function startTracking() {
   await sendMessage('start-tracking', {})
 }
+
 </script>
