@@ -7,5 +7,6 @@ declare module 'webext-bridge' {
     'tab-prev': { title: string | undefined }
     'get-current-tab': ProtocolWithReturn<{ tabId: number }, { title?: string }>
     'get-issue-name': ProtocolWithReturn<{ projectName: string; issueId: string }, { issueName?: string }>
+    'start-timetracking': ProtocolWithReturn<{ description: string; clockifyProjectId: string }, {}>
   }
 }

@@ -3,12 +3,15 @@
     <button class="btn mt-2" @click="openOptionsPage">
       Open Options
     </button>
+    <div class="bg-gray-400 p-3 flex flex-col items-start">
+      <div>{{ issueId }}</div>
+      <div>{{ projectName }}</div>
+      <div>{{ issueName }}</div>
+    </div>
+    <input v-model="description" class="p-1 border border-dark-100 rounded-md" type="text">
     <button class="btn mt-2" @click="startTracking">
       Start Tracking
     </button>
-    {{ issueId }}
-    {{ projectName }}
-    {{ issueName }}
   </main>
 </template>
 
@@ -18,6 +21,7 @@ import { sendMessage } from 'webext-bridge'
 const issueId = ref('')
 const projectName = ref('')
 const issueName = ref('')
+const description = ref('')
 
 onMounted(async() => {
   const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
@@ -45,6 +49,8 @@ onMounted(async() => {
       if (response.issueName) {
         issueName.value = response.issueName
       }
+
+      description.value = `#${issueId.value} ${issueName.value}`
     }
   }
 })
@@ -54,7 +60,10 @@ function openOptionsPage() {
 }
 
 async function startTracking() {
-  await sendMessage('start-tracking', {})
+  await sendMessage('start-timetracking', {
+    description: description.value,
+    clockifyProjectId: 'wip',
+  })
 }
 
 </script>

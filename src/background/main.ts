@@ -55,8 +55,8 @@ onMessage('get-current-tab', async() => {
   }
 })
 
-onMessage('start-tracking', async() => {
-  await postTimeentries()
+onMessage('start-timetracking', async({ data }) => {
+  await postTimeentries(data.clockifyProjectId, data.description)
 })
 
 onMessage('get-issue-name', async({ data }) => {

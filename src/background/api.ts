@@ -25,11 +25,15 @@ async function fetchClocify(method: 'get' | 'post', path: string, body: Record<s
   return convertKeys.toCamel(await response.json())
 }
 
-export async function postTimeentries() {
+export async function postTimeentries(projectId: string, description: string) {
   const response = await fetchClocify(
     'post',
     'time-entries',
-    { start: new Date() },
+    {
+      start: new Date(),
+      projectId,
+      description,
+    },
   )
 
   return response

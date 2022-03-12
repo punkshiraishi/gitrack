@@ -27,14 +27,15 @@ gitlab の Issue 詳細画面からトラッキングの操作をする
 - ✅background で起動時に options で保存した token を使って API を叩く
 - ✅sendMessage を使って任意のタイミングでリロードする
 - ✅レスポンスを local に保存する
+- ✅URL から リポジトリ名と Issue 番号を取得し、popup 上に表示する
+- ✅gitlab api で Issue 名を取得する
 - Popup から local のデータを取得して画面に表示する
 - Popup からリロードする
-- URL から リポジトリ名と Issue 番号を取得し、popup 上に表示する
-  - backend に問い合わせ必要？ → いずれにせよ詳細は必要なのでバックエンド経由で良い
 - gitlab の issue 詳細を開いたときに自動で Popup が表示される
 
 # 次にやること
-- ✅プロジェクト名からプロジェクト ID を取得する
-- ✅Issue 名を取得する
-- 推測した IssueID とリポジトリ名 と Issue 名でタイムトラッキングをスタートする
-
+- 推測した IssueID とプロジェクト名 と Issue 名でタイムトラッキングをスタートする
+  - timeentry 名: #123 XXX の修正 
+  - プロジェクト名: bc4l_contents
+    - 同じプロジェクト名が複数あるときにどうするか → 事前に選ばせたい
+    - プロジェクトが存在しないときにどうするか → 新規で作る?
