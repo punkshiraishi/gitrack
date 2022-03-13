@@ -55,6 +55,7 @@
     "webextension-polyfill": "^0.8.0"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.5.0",
     "@types/download": "8.0.1",
     "@typescript-eslint/parser": "^4.0.0",
     "body-parser": "1.19.1",
