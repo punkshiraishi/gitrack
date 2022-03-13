@@ -12,7 +12,7 @@ async function fetchClocify(method: 'get' | 'post', path: string, body?: Record<
       'X-Api-Key': clockifyToken,
       'Content-Type': 'application/json',
     },
-    body: body ? JSON.stringify(convertKeys.toSnake(body)) : undefined,
+    body: body ? JSON.stringify(body) : undefined,
     credentials: 'include',
   })
 
