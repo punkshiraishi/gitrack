@@ -10,6 +10,15 @@
       <div>{{ clockifyProjects }}</div>
     </div>
     <input v-model="description" class="p-1 border border-dark-100 rounded-md" type="text">
+    <select v-model="selectedClockifyProject">
+      <option
+        v-for="clockifyProject in clockifyProjects"
+        :key="clockifyProject.id"
+        :value="clockifyProject"
+      >
+        {{ clockifyProject.name }}
+      </option>
+    </select>
     <button class="btn mt-2" @click="startTracking">
       Start Tracking
     </button>
@@ -25,6 +34,7 @@ const projectName = ref('')
 const issueName = ref('')
 const description = ref('')
 const clockifyProjects = ref<ClockifyProject[]>([])
+const selectedClockifyProject = ref<ClockifyProject>()
 
 onMounted(async() => {
   const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
@@ -66,10 +76,12 @@ function openOptionsPage() {
 }
 
 async function startTracking() {
-  await sendMessage('start-timetracking', {
-    description: description.value,
-    clockifyProjectId: 'wip',
-  })
+  if (selectedClockifyProject.value) {
+    await sendMessage('start-timetracking', {
+      description: description.value,
+      clockifyProjectId: selectedClockifyProject.value.id,
+    })
+  }
 }
 
 </script>
