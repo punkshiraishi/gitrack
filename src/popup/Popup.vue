@@ -1,14 +1,8 @@
 <template>
-  <main class="w-[300px] px-4 py-5 text-center text-gray-700 flex flex-col space-y-3">
-    <button class="btn mt-2" @click="openOptionsPage">
+  <main class="w-[300px] px-4 pt-5 pb-20 text-center text-gray-700 flex flex-col space-y-5">
+    <button class="bg-gray-300 self-end py-1 px-2 rounded" @click="openOptionsPage">
       Open Options
     </button>
-    <div class="bg-gray-400 p-3 text-left flex flex-col items-start">
-      <div>{{ issueId }}</div>
-      <div>{{ projectName }}</div>
-      <div>{{ issueName }}</div>
-      <div>{{ clockifyProjects }}</div>
-    </div>
     <input
       v-model="description"
       class="p-1 border border-dark-100 rounded-md"
@@ -18,7 +12,7 @@
       v-model="selectedClockifyProject"
       :projects="clockifyProjects"
     />
-    <button class="btn mt-2" @click="startTracking">
+    <button class="btn" @click="startTracking">
       Start Tracking
     </button>
   </main>

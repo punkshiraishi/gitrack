@@ -7,7 +7,7 @@
   >
     <ListboxButton
       as="div"
-      class="border border-dark-200 rounded-md p-1"
+      class="border border-dark-200 rounded-md p-1 h-7"
     >
       <ClockifyProjectSelectRow v-if="modelValue" :project="modelValue" />
     </ListboxButton>
