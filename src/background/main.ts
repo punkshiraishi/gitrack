@@ -1,6 +1,6 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
-import { getIssue, getProjectsByName, postTimeentries } from './api'
+import { getIssue, getProjects, getProjectsByName, postTimeentries } from './api'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -72,4 +72,8 @@ onMessage('get-issue-name', async({ data }) => {
   return {
     issueName,
   }
+})
+
+onMessage('get-clockify-projects', async({ data }) => {
+  return await getProjects(data.projectName)
 })

@@ -8,7 +8,7 @@ async function getOptions() {
   )
 }
 
-async function fetchClocify(method: 'get' | 'post', path: string, body: Record<string, string | Date>) {
+async function fetchClocify(method: 'get' | 'post', path: string, body?: Record<string, string | Date>) {
   const { clockifyToken, clockifyWorkspace } = await getOptions()
   const url = `https://api.clockify.me/api/v1/workspaces/${clockifyWorkspace}/${path}`
 
@@ -23,6 +23,22 @@ async function fetchClocify(method: 'get' | 'post', path: string, body: Record<s
   })
 
   return convertKeys.toCamel(await response.json())
+}
+
+const clockifyProjectSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+})
+
+export type ClockifyProject = z.infer<typeof clockifyProjectSchema>
+
+export async function getProjects(projectName: string) {
+  const response = await fetchClocify(
+    'get',
+    `projects?name=${projectName}`,
+  )
+
+  return z.array(clockifyProjectSchema).parse(response)
 }
 
 export async function postTimeentries(projectId: string, description: string) {

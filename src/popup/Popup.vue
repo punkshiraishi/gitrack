@@ -7,6 +7,7 @@
       <div>{{ issueId }}</div>
       <div>{{ projectName }}</div>
       <div>{{ issueName }}</div>
+      <div>{{ clockifyProjects }}</div>
     </div>
     <input v-model="description" class="p-1 border border-dark-100 rounded-md" type="text">
     <button class="btn mt-2" @click="startTracking">
@@ -17,11 +18,13 @@
 
 <script setup lang="ts">
 import { sendMessage } from 'webext-bridge'
+import { ClockifyProject } from '~/background/api'
 
 const issueId = ref('')
 const projectName = ref('')
 const issueName = ref('')
 const description = ref('')
+const clockifyProjects = ref<ClockifyProject[]>([])
 
 onMounted(async() => {
   const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
@@ -38,6 +41,9 @@ onMounted(async() => {
 
     if (machedProjectName) {
       projectName.value = machedProjectName[1]
+      clockifyProjects.value = await sendMessage('get-clockify-projects', {
+        projectName: projectName.value,
+      })
     }
 
     if (matchedIssueId && machedProjectName) {

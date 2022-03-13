@@ -1,4 +1,5 @@
 import { ProtocolWithReturn } from 'webext-bridge'
+import { ClockifyProject } from '~/background/api'
 
 declare module 'webext-bridge' {
   export interface ProtocolMap {
@@ -7,6 +8,7 @@ declare module 'webext-bridge' {
     'tab-prev': { title: string | undefined }
     'get-current-tab': ProtocolWithReturn<{ tabId: number }, { title?: string }>
     'get-issue-name': ProtocolWithReturn<{ projectName: string; issueId: string }, { issueName?: string }>
+    'get-clockify-projects': ProtocolWithReturn<{ projectName: string }, ClockifyProject[]>
     'start-timetracking': ProtocolWithReturn<{ description: string; clockifyProjectId: string }, {}>
   }
 }
