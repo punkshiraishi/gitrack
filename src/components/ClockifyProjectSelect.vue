@@ -1,29 +1,34 @@
 <template>
-  <select
+  <Listbox
+    as="div"
+    class="relative"
     :value="modelValue"
-    class="p-1 border border-dark-100 rounded-md"
-    @change="onChange"
+    @update:modelValue="emit('update:modelValue', $event)"
   >
-    <option
-      v-for="project in projects"
-      :key="project.id"
-      :value="project"
+    <ListboxButton
+      as="div"
+      class="border border-dark-200 rounded-md p-1"
     >
-      <div class="flex flex-row justify-between">
-        <div :style="{ color: project.color }">
-          {{ project.name }}
-          {{ project.color }}
-        </div>
-        <div>
-          {{ project.clientName }}
-        </div>
-      </div>
-    </option>
-  </select>
+      <ClockifyProjectSelectRow v-if="modelValue" :project="modelValue" />
+    </ListboxButton>
+    <ListboxOptions as="div" class="absolute w-full my-2 p-1 bg-white rounded-md shadow-lg shadow-gray-300">
+      <ListboxOption
+        v-for="project in projects"
+        :key="project.id"
+        as="div"
+        class="cursor-pointer p-1 rounded hover:bg-gray-200"
+        :value="project"
+      >
+        <ClockifyProjectSelectRow :project="project" />
+      </ListboxOption>
+    </ListboxOptions>
+  </Listbox>
 </template>
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import ClockifyProjectSelectRow from './ClockifyProjectSelectRow.vue'
 import { ClockifyProject } from '~/api/clockify'
 
 const props = defineProps({
@@ -40,12 +45,6 @@ const props = defineProps({
 const { projects } = toRefs(props)
 
 const emit = defineEmits(['update:modelValue'])
-
-function onChange(event: Event) {
-  if (event.target instanceof HTMLSelectElement) {
-    emit('update:modelValue', event.target.value)
-  }
-}
 
 watch(projects, (item) => {
   if (item.length > 0) {
