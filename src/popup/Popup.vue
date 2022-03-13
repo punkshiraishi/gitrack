@@ -3,22 +3,21 @@
     <button class="btn mt-2" @click="openOptionsPage">
       Open Options
     </button>
-    <div class="bg-gray-400 p-3 flex flex-col items-start">
+    <div class="bg-gray-400 p-3 text-left flex flex-col items-start">
       <div>{{ issueId }}</div>
       <div>{{ projectName }}</div>
       <div>{{ issueName }}</div>
       <div>{{ clockifyProjects }}</div>
     </div>
-    <input v-model="description" class="p-1 border border-dark-100 rounded-md" type="text">
-    <select v-model="selectedClockifyProject">
-      <option
-        v-for="clockifyProject in clockifyProjects"
-        :key="clockifyProject.id"
-        :value="clockifyProject"
-      >
-        {{ clockifyProject.name }}
-      </option>
-    </select>
+    <input
+      v-model="description"
+      class="p-1 border border-dark-100 rounded-md"
+      type="text"
+    >
+    <ClockifyProjectSelect
+      v-model="selectedClockifyProject"
+      :projects="clockifyProjects"
+    />
     <button class="btn mt-2" @click="startTracking">
       Start Tracking
     </button>
@@ -28,6 +27,7 @@
 <script setup lang="ts">
 import { sendMessage } from 'webext-bridge'
 import { ClockifyProject } from '~/api/clockify'
+import ClockifyProjectSelect from '~/components/ClockifyProjectSelect.vue'
 
 const issueId = ref('')
 const projectName = ref('')
