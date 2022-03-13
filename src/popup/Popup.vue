@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { sendMessage } from 'webext-bridge'
-import { ClockifyProject } from '~/background/api'
+import { ClockifyProject } from '~/api/clockify'
 
 const issueId = ref('')
 const projectName = ref('')
