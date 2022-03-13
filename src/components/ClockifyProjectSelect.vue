@@ -9,7 +9,15 @@
       :key="project.id"
       :value="project"
     >
-      {{ project.name }}
+      <div class="flex flex-row justify-between">
+        <div :style="{ color: project.color }">
+          {{ project.name }}
+          {{ project.color }}
+        </div>
+        <div>
+          {{ project.clientName }}
+        </div>
+      </div>
     </option>
   </select>
 </template>

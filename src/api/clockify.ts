@@ -22,6 +22,8 @@ async function fetchClocify(method: 'get' | 'post', path: string, body?: Record<
 const projectSchema = z.object({
   id: z.string(),
   name: z.string(),
+  clientName: z.string(),
+  color: z.string(),
 })
 
 export type ClockifyProject = z.infer<typeof projectSchema>
