@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue'
+import { PropType } from 'vue'
 import { ClockifyProject } from '~/api/clockify'
 
 const props = defineProps({
@@ -38,4 +38,10 @@ function onChange(event: Event) {
     emit('update:modelValue', event.target.value)
   }
 }
+
+watch(projects, (item) => {
+  if (item.length > 0) {
+    emit('update:modelValue', item[0])
+  }
+})
 </script>
