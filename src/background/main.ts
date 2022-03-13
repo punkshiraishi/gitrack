@@ -1,6 +1,6 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
-import { getIssue, getProjects, getProjectsByName, postTimeentries } from './api'
+import { clockify, gitlab } from '~/api'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -56,16 +56,16 @@ onMessage('get-current-tab', async() => {
 })
 
 onMessage('start-timetracking', async({ data }) => {
-  await postTimeentries(data.clockifyProjectId, data.description)
+  await clockify.postTimeentries(data.clockifyProjectId, data.description)
 })
 
 onMessage('get-issue-name', async({ data }) => {
-  const projects = await getProjectsByName(data.projectName)
+  const projects = await gitlab.getProjectsByName(data.projectName)
 
   let issueName = ''
 
   if (projects.length > 0) {
-    const { title } = await getIssue(projects[0].id.toString(), data.issueId)
+    const { title } = await gitlab.getIssue(projects[0].id.toString(), data.issueId)
     issueName = title
   }
 
@@ -75,5 +75,5 @@ onMessage('get-issue-name', async({ data }) => {
 })
 
 onMessage('get-clockify-projects', async({ data }) => {
-  return await getProjects(data.projectName)
+  return await clockify.getProjects(data.projectName)
 })

@@ -7,6 +7,12 @@ export const optionsSchema = z.object({
   clockifyWorkspace: z.string(),
 })
 
+export async function getOptions() {
+  return optionsSchema.parse(
+    JSON.parse((await browser.storage.local.get('options')).options),
+  )
+}
+
 type Options = z.infer<typeof optionsSchema>
 
 export const storageOptions = useStorageLocal<Options>(
