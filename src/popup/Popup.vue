@@ -1,17 +1,31 @@
 <template>
-  <main class="w-[300px] px-4 pt-5 pb-20 text-center text-gray-700 flex flex-col space-y-5">
-    <button class="bg-gray-300 self-end py-1 px-2 rounded" @click="openOptionsPage">
+  <main class="w-[400px] px-4 pt-5 pb-20 text-center text-gray-700 flex flex-col space-y-5">
+    <button class="bg-gray-300 self-end py-1 px-2 rounded-sm" @click="openOptionsPage">
       Open Options
     </button>
     <input
       v-model="description"
-      class="p-1 border border-dark-100 rounded-md"
+      class="p-1 border border-gray-300"
       type="text"
     >
-    <ClockifyProjectSelect
-      v-model="selectedClockifyProject"
-      :projects="clockifyProjects"
-    />
+    <template v-if="clockifyProjects.length > 0">
+      <ClockifyProjectSelect
+        v-model="selectedClockifyProject"
+        :projects="clockifyProjects"
+      />
+    </template>
+    <template v-else>
+      <div class="flex flex-row space-x-2">
+        <input
+          value="新しいプロジェクトの名前"
+          class="p-1 border border-gray-300"
+          type="text"
+        >
+        <button class="bg-gray-300 self-end py-1 px-2 rounded">
+          Create Project
+        </button>
+      </div>
+    </template>
     <button class="btn" @click="startTracking">
       Start Tracking
     </button>

@@ -7,19 +7,19 @@
   >
     <ListboxButton
       as="div"
-      class="border border-dark-200 rounded-md p-1 h-7"
+      class="border border-gray-300 p-1 h-7"
     >
       <ClockifyProjectSelectRow v-if="modelValue" :project="modelValue" />
     </ListboxButton>
-    <ListboxOptions as="div" class="absolute w-full my-2 p-1 bg-white rounded-md shadow-lg shadow-gray-300">
+    <ListboxOptions as="div" class="absolute w-full m-0 bg-white border border-gray-300 shadow-md shadow-blue-gray-600">
       <ListboxOption
         v-for="project in projects"
         :key="project.id"
         as="div"
-        class="cursor-pointer p-1 rounded hover:bg-gray-200"
+        class="cursor-pointer hover:bg-gray-200"
         :value="project"
       >
-        <ClockifyProjectSelectRow :project="project" />
+        <ClockifyProjectSelectRow class="py-1 px-2" :project="project" />
       </ListboxOption>
     </ListboxOptions>
   </Listbox>
