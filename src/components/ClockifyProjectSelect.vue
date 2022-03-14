@@ -50,5 +50,7 @@ watch(projects, (item) => {
   if (item.length > 0) {
     emit('update:modelValue', item[0])
   }
+}, {
+  immediate: true,
 })
 </script>
