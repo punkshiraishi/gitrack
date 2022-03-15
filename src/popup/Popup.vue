@@ -11,15 +11,28 @@
       </template>
       <template v-else>
         <template v-if="clockifyProjects.length > 0">
-          <input
-            v-model="description"
-            class="p-1 border border-gray-300"
-            type="text"
-          >
-          <ClockifyProjectSelect
-            v-model="selectedClockifyProject"
-            :projects="clockifyProjects"
-          />
+          <div class="h-full w-full flex flex-col space-y-3">
+            <div class="flex flex-col space-y-1 items-start">
+              <div class="text-sky-500">
+                Timeentry
+              </div>
+              <input
+                v-model="description"
+                class="w-full p-1 border border-gray-300"
+                type="text"
+              >
+            </div>
+            <div class="flex flex-col space-y-1 items-start">
+              <div class="text-sky-500">
+                Clockify Project Name
+              </div>
+              <ClockifyProjectSelect
+                v-model="selectedClockifyProject"
+                class="w-full"
+                :projects="clockifyProjects"
+              />
+            </div>
+          </div>
         </template>
         <template v-else>
           <div class="flex flex-row space-x-2">
