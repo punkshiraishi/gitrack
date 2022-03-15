@@ -74,6 +74,21 @@ onMessage('get-issue-name', async({ data }) => {
   }
 })
 
+onMessage('get-merge-request-name', async({ data }) => {
+  const projects = await gitlab.getProjectsByName(data.projectName)
+
+  let mergeRequestName = ''
+
+  if (projects.length > 0) {
+    const { title } = await gitlab.getMergeRequest(projects[0].id.toString(), data.mergeRequestId)
+    mergeRequestName = title
+  }
+
+  return {
+    mergeRequestName,
+  }
+})
+
 onMessage('get-clockify-projects', async({ data }) => {
   return await clockify.getProjects(data.projectName)
 })

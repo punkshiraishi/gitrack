@@ -1,5 +1,6 @@
 <template>
   <main class="w-[400px] px-4 pt-5 pb-20 text-center text-gray-700 flex flex-col space-y-5">
+    {{ error }}
     <button class="bg-gray-300 self-end py-1 px-2 rounded-sm" @click="openOptionsPage">
       Open Options
     </button>
@@ -60,13 +61,11 @@ import { ClockifyProject } from '~/api/clockify'
 import ClockifyProjectSelect from '~/components/ClockifyProjectSelect.vue'
 import LoadingDot from '~/components/LoadingDot.vue'
 
-const issueId = ref('')
-const projectName = ref('')
-const issueName = ref('')
 const description = ref('')
 const clockifyProjects = ref<ClockifyProject[]>([])
 const selectedClockifyProject = ref<ClockifyProject>()
 const loading = ref(true)
+const error = ref()
 
 onMounted(async() => {
   try {
@@ -74,34 +73,39 @@ onMounted(async() => {
     const url = tabs[0].url
 
     if (url) {
-      const matchedIssueId = url.match(/\/-\/issues\/(\d+)/)
-
-      if (matchedIssueId) {
-        issueId.value = matchedIssueId[1]
-      }
-
-      const machedProjectName = url.match(/\/([^\/]+)\/-\/issues/)
-
+      const machedProjectName = url.match(/\/([^\/]+)\/-\/(issues|merge_requests)/)
+      console.log(machedProjectName)
       if (machedProjectName) {
-        projectName.value = machedProjectName[1]
         clockifyProjects.value = await sendMessage('get-clockify-projects', {
-          projectName: projectName.value,
+          projectName: machedProjectName[1],
         })
       }
 
+      const matchedIssueId = url.match(/\/-\/issues\/(\d+)/)
       if (matchedIssueId && machedProjectName) {
         const response = await sendMessage('get-issue-name', {
           issueId: matchedIssueId[1],
           projectName: machedProjectName[1],
         })
 
-        if (response.issueName) {
-          issueName.value = response.issueName
-        }
+        description.value = `#${matchedIssueId[1]} ${response.issueName}`
+      }
 
-        description.value = `#${issueId.value} ${issueName.value}`
+      const matchedMergeRequestId = url.match(/\/-\/merge_requests\/(\d+)/)
+      console.log(matchedMergeRequestId)
+      console.log(machedProjectName)
+      if (matchedMergeRequestId && machedProjectName) {
+        const response = await sendMessage('get-merge-request-name', {
+          mergeRequestId: matchedMergeRequestId[1],
+          projectName: machedProjectName[1],
+        })
+
+        description.value = `!${matchedMergeRequestId[1]} ${response.mergeRequestName}`
       }
     }
+  }
+  catch (e) {
+    error.value = e
   }
   finally {
     loading.value = false

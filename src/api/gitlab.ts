@@ -38,7 +38,7 @@ export async function getProjectsByName(projectName: string) {
 }
 
 /**
- * GET /issue
+ * GET /issues
  */
 const issueSchema = z.object({
   title: z.string(),
@@ -53,4 +53,20 @@ export async function getIssue(projectId: string, issueId: string) {
   )
 
   return issueSchema.parse(response)
+}
+
+/**
+ * GET /merge_requests
+ */
+const mergeRequestSchema = z.object({
+  title: z.string(),
+})
+export async function getMergeRequest(projectId: string, mergeRequest: string) {
+  const response = await fetchGitlab(
+    'get',
+    `projects/${projectId}/merge_requests/${mergeRequest}`,
+  )
+  // throw response
+
+  return mergeRequestSchema.parse(response)
 }
