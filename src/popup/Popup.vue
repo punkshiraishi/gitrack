@@ -46,7 +46,7 @@
             </button>
           </div>
         </template>
-        <button class="btn" @click="startTracking">
+        <button class="bg-sky-500 text-white p-2 font-bold" @click="startTracking">
           Start Tracking
         </button>
       </template>
