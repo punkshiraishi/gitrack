@@ -31,7 +31,7 @@ export type GitlabProject = z.infer<typeof projectSchema>
 export async function getProjectsByName(projectName: string) {
   const response = await fetchGitlab(
     'get',
-    `projects?search=${projectName}`,
+    `projects?membership=true&search=${projectName}`,
   )
 
   return z.array(projectSchema).parse(response)
