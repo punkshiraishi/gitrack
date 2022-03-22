@@ -11,18 +11,18 @@
         </div>
       </template>
       <template v-else>
-        <template v-if="clockifyProjects.length > 0">
-          <div class="h-full w-full flex flex-col space-y-3">
-            <div class="flex flex-col space-y-1 items-start">
-              <div class="text-sky-500">
-                Timeentry
-              </div>
-              <input
-                v-model="description"
-                class="w-full p-1 border border-gray-300"
-                type="text"
-              >
+        <div class="h-full w-full flex flex-col space-y-3">
+          <div class="flex flex-col space-y-1 items-start">
+            <div class="text-sky-500">
+              Timeentry
             </div>
+            <input
+              v-model="description"
+              class="w-full p-1 border border-gray-300"
+              type="text"
+            >
+          </div>
+          <template v-if="clockifyProjects.length > 0">
             <div class="flex flex-col space-y-1 items-start">
               <div class="text-sky-500">
                 Clockify Project Name
@@ -33,20 +33,20 @@
                 :projects="clockifyProjects"
               />
             </div>
-          </div>
-        </template>
-        <template v-else>
-          <div class="flex flex-row space-x-2">
-            <input
-              value="新しいプロジェクトの名前"
-              class="p-1 border border-gray-300"
-              type="text"
-            >
-            <button class="bg-gray-300 self-end py-1 px-2 rounded">
-              Create Project
-            </button>
-          </div>
-        </template>
+          </template>
+          <template v-else>
+            <div class="flex flex-row space-x-2">
+              <input
+                value="新しいプロジェクトの名前"
+                class="p-1 border border-gray-300"
+                type="text"
+              >
+              <button class="bg-gray-300 self-end py-1 px-2 rounded">
+                Create Project
+              </button>
+            </div>
+          </template>
+        </div>
         <button class="bg-sky-500 text-white p-2 font-bold" @click="startTracking">
           Start Tracking
         </button>
