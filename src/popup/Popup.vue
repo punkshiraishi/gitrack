@@ -73,34 +73,37 @@ onMounted(async() => {
     const url = tabs[0].url
 
     if (url) {
-      const machedProjectName = url.match(/\/([^\/]+)\/-\/(issues|merge_requests)/)
-      console.log(machedProjectName)
-      if (machedProjectName) {
+      const projectName = url.match(/\/([^\/]+)\/-\/(issues|merge_requests)/)?.[1]
+
+      if (projectName) {
         clockifyProjects.value = await sendMessage('get-clockify-projects', {
-          projectName: machedProjectName[1],
+          projectName,
         })
       }
 
-      const matchedIssueId = url.match(/\/-\/issues\/(\d+)/)
-      if (matchedIssueId && machedProjectName) {
+      const projectNameWithNamespace = url
+        .match(/^https?:\/{2,}.*?\/(.*)\/-\/(issues|merge_requests)/)?.[1]
+
+      const issueId = url.match(/\/-\/issues\/(\d+)/)?.[1]
+
+      if (issueId && projectNameWithNamespace) {
         const response = await sendMessage('get-issue-name', {
-          issueId: matchedIssueId[1],
-          projectName: machedProjectName[1],
+          issueId,
+          projectNameWithNamespace,
         })
 
-        description.value = `#${matchedIssueId[1]} ${response.issueName}`
+        description.value = `#${issueId} ${response.issueName}`
       }
 
-      const matchedMergeRequestId = url.match(/\/-\/merge_requests\/(\d+)/)
-      console.log(matchedMergeRequestId)
-      console.log(machedProjectName)
-      if (matchedMergeRequestId && machedProjectName) {
+      const mergeRequestId = url.match(/\/-\/merge_requests\/(\d+)/)?.[1]
+
+      if (mergeRequestId && projectNameWithNamespace) {
         const response = await sendMessage('get-merge-request-name', {
-          mergeRequestId: matchedMergeRequestId[1],
-          projectName: machedProjectName[1],
+          mergeRequestId,
+          projectNameWithNamespace,
         })
 
-        description.value = `!${matchedMergeRequestId[1]} ${response.mergeRequestName}`
+        description.value = `!${mergeRequestId} ${response.mergeRequestName}`
       }
     }
   }

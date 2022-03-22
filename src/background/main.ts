@@ -60,7 +60,7 @@ onMessage('start-timetracking', async({ data }) => {
 })
 
 onMessage('get-issue-name', async({ data }) => {
-  const projects = await gitlab.getProjectsByName(data.projectName)
+  const projects = await gitlab.getProjectsByName(data.projectNameWithNamespace)
 
   let issueName = ''
 
@@ -75,7 +75,7 @@ onMessage('get-issue-name', async({ data }) => {
 })
 
 onMessage('get-merge-request-name', async({ data }) => {
-  const projects = await gitlab.getProjectsByName(data.projectName)
+  const projects = await gitlab.getProjectsByName(data.projectNameWithNamespace)
 
   let mergeRequestName = ''
 
