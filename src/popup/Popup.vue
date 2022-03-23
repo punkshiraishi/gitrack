@@ -47,8 +47,12 @@
             </div>
           </template>
         </div>
-        <button class="bg-sky-500 text-white p-2 font-bold" @click="startTracking">
-          Start Tracking
+        <button
+          class="bg-sky-500 text-white p-2 font-bold"
+          :disabled="starting"
+          @click="startTracking"
+        >
+          {{ starting ? 'Starting' : 'Start Tracking' }}
         </button>
       </template>
     </div>
@@ -65,6 +69,7 @@ const description = ref('')
 const clockifyProjects = ref<ClockifyProject[]>([])
 const selectedClockifyProject = ref<ClockifyProject>()
 const loading = ref(true)
+const starting = ref(false)
 const error = ref()
 
 onMounted(async() => {
@@ -120,11 +125,12 @@ function openOptionsPage() {
 }
 
 async function startTracking() {
+  starting.value = true
   if (selectedClockifyProject.value) {
     await sendMessage('start-timetracking', {
       description: description.value,
       clockifyProjectId: selectedClockifyProject.value.id,
-    })
+    }).finally(() => starting.value = false)
   }
 }
 
